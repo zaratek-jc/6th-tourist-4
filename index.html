@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listening Activity: Getting to the Hotel</title>
+  <style>
+    :root {
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-color: #000000;
+      --oxford-blue: #002147;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success: #16a34a;
+      --error: #dc2626;
+      --border-color: #cbd5e1;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: #0f172a;
+      padding: 0 0 40px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Banner Azul Oxford de Lado a Lado */
+    .oxford-header {
+      background-color: var(--oxford-blue);
+      color: #ffffff;
+      width: 100%;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      margin-bottom: 28px;
+    }
+
+    .school-title {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: #e2e8f0;
+      letter-spacing: 0.5px;
+    }
+
+    .container {
+      max-width: 850px;
+      width: calc(100% - 32px);
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .instruction {
+      font-size: 1.05rem;
+      color: #475569;
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* Student Info Panel */
+    .info-card {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      align-items: center;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .input-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    .input-group input, .input-group select {
+      padding: 9px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      outline: none;
+      background-color: #ffffff;
+    }
+
+    .input-group input:focus, .input-group select:focus {
+      border-color: var(--primary);
+    }
+
+    .timer-display {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: #eff6ff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      text-align: center;
+      border: 1px solid #bfdbfe;
+    }
+
+    /* Audio Player */
+    .audio-player-card {
+      background: #1e293b;
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .audio-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .audio-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .audio-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Speed Control Styles */
+    .speed-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+    }
+
+    .speed-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-right: 2px;
+    }
+
+    .speed-btn {
+      background: transparent;
+      color: #cbd5e1;
+      border: 1px solid #475569;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .speed-btn:hover {
+      background: #334155;
+      color: white;
+    }
+
+    .speed-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Dialogue List (Drag & Drop) */
+    .dialogue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+      min-height: 400px;
+    }
+
+    .dialogue-card {
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px 18px;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, border-color 0.2s, box-shadow 0.2s;
+      user-select: none;
+    }
+
+    .dialogue-card:active {
+      cursor: grabbing;
+    }
+
+    .dialogue-card.dragging {
+      opacity: 0.3;
+      border: 2px dashed var(--primary);
+      background-color: #eff6ff;
+    }
+
+    .dialogue-card.correct {
+      border-color: var(--success);
+      background-color: #f0fdf4;
+    }
+
+    .dialogue-card.incorrect {
+      border-color: var(--error);
+      background-color: #fef2f2;
+    }
+
+    .handle {
+      font-weight: bold;
+      color: #94a3b8;
+      font-size: 1.2rem;
+    }
+
+    .speaker-tag {
+      font-weight: 700;
+      min-width: 75px;
+      color: #000000;
+    }
+
+    .card-text {
+      flex: 1;
+      font-size: 0.98rem;
+      line-height: 1.4;
+      color: #000000;
+    }
+
+    .status-icon {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    /* Action Buttons */
+    .action-bar {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #64748b;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #15803d;
+    }
+
+    /* Results Box */
+    .results-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .results-content {
+      background: white;
+      padding: 32px;
+      border-radius: 16px;
+      text-align: center;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    .score-badge {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 16px 0;
+    }
+
+    .motivation-msg {
+      font-size: 1.1rem;
+      color: #334155;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .oxford-header {
+        padding: 20px 12px;
+      }
+      .school-title {
+        font-size: 1.7rem;
+      }
+      .subtitle {
+        font-size: 1.05rem;
+      }
+      .container {
+        padding: 16px;
+      }
+      .dialogue-card {
+        padding: 10px 12px;
+      }
+      .speaker-tag {
+        min-width: 65px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header Azul Oxford de Lado a Lado -->
+<header class="oxford-header">
+  <h1 class="school-title">COLEGIO SAN IGNACIO</h1>
+  <div class="subtitle">6th grade Listening Comprehension Activity</div>
+</header>
+
+<div class="container">
+  <p class="instruction">Listen to the dialogue and put the sentences in the correct order.</p>
+
+  <!-- Student Info -->
+  <div class="info-card">
+    <div class="input-group">
+      <label for="student-course">Curso</label>
+      <select id="student-course">
+        <option value="">-- Selecciona Curso --</option>
+        <option value="6° Básico A">6° Básico A</option>
+        <option value="6° Básico B">6° Básico B</option>
+        <option value="6° Básico C">6° Básico C</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label for="student-name">Estudiante</label>
+      <select id="student-name" disabled>
+        <option value="">-- Primero selecciona curso --</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label for="activity-date">Fecha</label>
+      <input type="date" id="activity-date">
+    </div>
+    <div class="timer-display" id="timer">Time: 00:00</div>
+  </div>
+
+  <!-- Audio Player -->
+  <div class="audio-player-card">
+    <div class="audio-controls">
+      <button class="audio-btn" id="play-btn">▶ Play</button>
+      <button class="audio-btn" id="pause-btn">⏸ Pause</button>
+      <button class="audio-btn" id="repeat-btn">🔄 Replay</button>
+
+      <!-- Speed Control Buttons -->
+      <div class="speed-controls">
+        <span class="speed-label">Speed:</span>
+        <button class="speed-btn active" data-speed="1.0">1.0x (Normal)</button>
+        <button class="speed-btn" data-speed="0.8">0.8x</button>
+        <button class="speed-btn" data-speed="0.6">0.6x</button>
+      </div>
+
+      <span id="audio-status" style="font-size: 0.9rem; color: #cbd5e1;">Ready to play</span>
+    </div>
+    <audio id="html-audio" src="4australia.mp3" preload="auto"></audio>
+  </div>
+
+  <!-- Dialogue Draggable Container -->
+  <div class="dialogue-list" id="dialogue-container">
+    <!-- Dynamically Populated -->
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <button class="btn btn-primary" id="check-btn">Check Answers</button>
+    <button class="btn btn-secondary" id="retry-btn">Try Again</button>
+    <button class="btn btn-success" id="download-btn">Download Report</button>
+  </div>
+</div>
+
+<!-- Modal Results -->
+<div class="results-modal" id="results-modal">
+  <div class="results-content">
+    <h2>Activity Completed!</h2>
+    <div class="score-badge" id="score-display">[0/10]</div>
+    <p class="motivation-msg" id="motivation-display"></p>
+    <button class="btn btn-primary" onclick="closeModal()">Close & Review</button>
+  </div>
+</div>
+
+<script>
+  // Student Database
+  const studentsData = {
+    "6° Básico A": [
+      "ARELLANO CORTÉS VALENTÍN ALONSO", "BUSTOS QUEZADA FELIPE ALONSO", "CALDERÓN LEZCANO ISIDORA MARTINA", "CASTAÑEDA IBAÑEZ FERNANDA", "CARO ORELLANA AGUSTINA ANTONIA", "CÉSPEDES SÁNCHEZ JOSEFINA IGNACIA", "CUEVAS MAHN IGNACIO ALEJANDRO", "DÍAZ GUTIÉRREZ TOMÁS ALONSO", "DÍAZ MEDEL VIOLETA EMILIANA", "DÍAZ TORO ALBERTO ALEJANDRO", "ESCOBEDO DE LA FUENTE VALENTINA ANDREA", "GILCHRIST VALDÉS ALEXANDER NEDJELJKO", "GÓMEZ GALLARDO TERESITA EMILIA", "GÓMEZ ZÚÑIGA JOSÉ IGNACIO", "GUERRERO MORENO GABRIEL", "GUTIÉRREZ PACHECO ANTONIA CAROLINA", "GUZMÁN MINA CATALINA PAZ", "GUZMÁN ZAMORA JOSÉ TOMÁS", "HONTAVILLA ROGAZY CATALINA FERNANDA", "MANRÍQUEZ CATALÁN MARIANA IGNACIA", "OJEDA ESTEVEZ VICTORIA ANTONELLA", "OPAZO CABEZAS EMILIA ALOISE", "OSORIO BERRIOS GASTÓN ALONSO VITAL", "PEÑAS SOTO SANTIAGO RAFAEL", "PINTO CASTRO MATEO IGNACIO", "POZO URETA CRISTÓBAL VALENTÍN", "PRADENA PEREDO ANTONIA HELENA", "RAMÍREZ ESPINOZA DIEGO JOAQUÍN", "RIVEROS ALVAREZ FRANCISCA ANDREA", "RODRÍGUEZ MERCADO GUSTAVO VENTURA", "VALENZUELA CANALES MARTINA PASCALE", "VÁSQUEZ CONTRERAS MARÍA FERNANDA", "VERA RUIZ MATILDE IGNACIA", "VILLAR RAULD NICOLÁS AGUSTÍN", "VILLEGAS LLANCO JUAN IGNACIO", "YÁÑEZ ESPINOZA DIEGO ANTONIO"
+    ],
+    "6° Básico B": [
+      "ARAVENA RUZ VICENTE ALEJANDRO", "ARÍSTEGUI PARRAGUEZ PASCALE AURORA", "BLANCO VERA GABRIEL ADOLFO", "BRITO JOFRÉ EMILIA JOSEFINA", "BRUNET CUELLAR SEBASTIÁN ARIEL", "CERPA CARRILLO EMILIA JESÚS", "FUENZALIDA PARRA VIOLETA", "GONZÁLEZ VERGARA IGNACIO ANTONIO", "GORNALL ALARCON RAYEN ELUNEY", "LABRAÑA BARRERA AMANDA LOURDES", "LEÓN DÁVILA TOMÁS IGNACIO", "LEÓN SAAVEDRA NICOLE VICTORIA", "LILLO SALDAÑA FRANCISCA SOFÍA", "LOYOLA HERRERA JOSEFA IGNACIA", "MAHNCKE MONSALVE IGNACIO ANTONIO", "MALDONADO SEGOVIA SANTIAGO AGUSTÍN", "MENA BRAVO RAÚL ALBERTO", "MORENO BRACAMONTE MARCO ALEJANDRO", "MOYA MADERO JOSEFINA EMILIA", "NOVA ACEVEDO MARTINA IGNACIA", "OLIVARES CATRO JOSEFINA PAZ", "ORTIZ DONOSO SIMONA IGNACIA", "PÉREZ GONZÁLEZ ALONSO SEBASTIÁN", "POVEDA SERRANO PABLO SALVADOR", "RAMÍREZ LÓPEZ JOSÉ MIGUEL", "REBOLLO FUENTES BENJAMÍN IGNACIO", "RIESCO MENDOZA TOMAS FELIPE", "RUBIO ROSAS JULIÁN ALEJANDRO", "SMOK RODRÍGUEZ LAURA VICTORIA", "SOTO GONZÁLEZ JOSEFA IGNACIA", "VENEGAS ARANCIBIA DIEGO TOMÁS", "VERDEJO GALLEGUILLOS BENJAMÍN TOMÁS ANTONIO", "VIDAL TORRES GONZALO ANTONIO", "VILLALOBOS GUEVARA JULIÁN ERNESTO", "YÁÑEZ LÓPEZ FERNANDA SOFÍA", "VILLAGRA ALARCÓN ANITA CAROLINA"
+    ],
+    "6° Básico C": [
+      "ABURTO ROMERO PABLO IGNACIO", "ACEVEDO GARRIDO ANAHÍ", "APIOLAZA SCACCHI TOMÁS ANDRÉS", "ARBURO LEÓN BRUNO AUGUSTO", "BAHAMONDES CÁCERES CAMILA MAGDALENA", "CABAÑAS GUIMPERT DAMIÁN", "CÁCERES MUÑOZ LAURA SOFÍA", "CALDERÓN ZAMORA FACUNDO", "CORREA PIÑA RENATA IGNACIA", "CUEVAS VIVALLO AMANDA SOFÍA", "DELGADO OLIVA CATALINA HELENA", "DÍAZ ARAGÓN GONZALO ANDRÉS", "DÍAZ PÉREZ ROCÍO VICTORIA", "FAJARDO GALLEGOS SEBASTIÁN IGNACIO", "LABRA MERIÑO SEBASTIÁN GABRIEL", "MARCHANT CARRANCIO PÍA CAROLINA", "MARCHANT ESCANDOR ISABELLA", "MOLINEAUX CEPEDA LEONOR VIOLETA", "MUÑOZ NORAMBUENA JOAQUÍN EDUARDO", "OLIVA RODRÍGUEZ MARTINA BELÉN", "OLIVARES CASTILLO FRANCISCA FERNANDA", "OLIVARES SÁNCHEZ RAÚL ALONSO", "PEÑA MARTÍN CAROLINA", "REYGADAS MUÑOZ MÁXIMO VALENTINO", "RIFFO FERNÁNDEZ VALENTÍN", "RODRÍGUEZ YÁÑEZ BEATRIZ AMALIA", "RUIZ URZÚA CLEMENTE ALONSO", "RUTHERFORD RUTHERFORD MARÍA GRACIA", "SALINAS ZAMORANO VICENTE RAFAEL", "SILVA MANRÍQUEZ GASPAR SALVADOR", "TRUJILLO PINTO ALONSO ANDRÉS", "URZÚA LAROZE FRANCISCO JAVIER", "VARGAS URRUTIA AMANDA IGNACIA", "VALIENTE NÚÑEZ MARÍA PAZ", "VELASCO BARCELÓ GASPAR ANTÜ", "WALKER TORRES SALVADOR", "ZÚÑIGA ARAVENA JOAQUÍN ALONSO"
+    ]
+  };
+
+  // Dialogue Data for Getting to the Hotel
+  const originalDialogue = [
+    { id: 0, speaker: "Tourist", text: "Excuse me. How do I get to the Grand Hotel?" },
+    { id: 1, speaker: "Passerby", text: "Go straight on until you reach the end of the street. It’s opposite the park." },
+    { id: 2, speaker: "Tourist", text: "Ah, opposite the park! That sounds very simple. Thank you!" },
+    { id: 3, speaker: "Passerby", text: "You're welcome! You look exhausted—did you just get off a long flight?" },
+    { id: 4, speaker: "Tourist", text: "Yes, I just flew in from Australia! It was over twenty hours of travel, but I couldn't wait to get here." },
+    { id: 5, speaker: "Passerby", text: "Wow, Australia! Welcome! What do you think of our city so far?" },
+    { id: 6, speaker: "Tourist", text: "Even from the taxi ride, I could tell it's such a clean, peaceful, and charming city. I can't wait to rest up and explore tomorrow." },
+    { id: 7, speaker: "Passerby", text: "Get some good rest at the hotel! The park right across from it is wonderful for a morning walk." },
+    { id: 8, speaker: "Tourist", text: "I'll be sure to check it out. Thanks for your help!" },
+    { id: 9, speaker: "Passerby", text: "Any time! Enjoy your stay." }
+  ];
+
+  let timerInterval = null;
+  let secondsElapsed = 0;
+  let isTimerRunning = false;
+
+  // DOM Elements
+  const container = document.getElementById("dialogue-container");
+  const playBtn = document.getElementById("play-btn");
+  const pauseBtn = document.getElementById("pause-btn");
+  const repeatBtn = document.getElementById("repeat-btn");
+  const audioStatus = document.getElementById("audio-status");
+  const htmlAudio = document.getElementById("html-audio");
+  const timerDisplay = document.getElementById("timer");
+  const dateInput = document.getElementById("activity-date");
+  const courseSelect = document.getElementById("student-course");
+  const nameSelect = document.getElementById("student-name");
+  const speedBtns = document.querySelectorAll(".speed-btn");
+
+  // Initialize Date
+  dateInput.valueAsDate = new Date();
+
+  // Populate Student Dropdown dynamically
+  courseSelect.addEventListener("change", () => {
+    const selectedCourse = courseSelect.value;
+    nameSelect.innerHTML = "";
+
+    if (selectedCourse && studentsData[selectedCourse]) {
+      nameSelect.disabled = false;
+      const defaultOpt = document.createElement("option");
+      defaultOpt.value = "";
+      defaultOpt.textContent = "-- Selecciona Estudiante --";
+      nameSelect.appendChild(defaultOpt);
+
+      studentsData[selectedCourse].forEach(student => {
+        const opt = document.createElement("option");
+        opt.value = student;
+        opt.textContent = student;
+        nameSelect.appendChild(opt);
+      });
+    } else {
+      nameSelect.disabled = true;
+      const defaultOpt = document.createElement("option");
+      defaultOpt.value = "";
+      defaultOpt.textContent = "-- Primero selecciona curso --";
+      nameSelect.appendChild(defaultOpt);
+    }
+  });
+
+  // Timer Functions
+  function startTimer() {
+    if (!isTimerRunning) {
+      isTimerRunning = true;
+      timerInterval = setInterval(() => {
+        secondsElapsed++;
+        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+        const secs = String(secondsElapsed % 60).padStart(2, '0');
+        timerDisplay.textContent = `Time: ${mins}:${secs}`;
+      }, 1000);
+    }
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+    isTimerRunning = false;
+  }
+
+  function resetTimer() {
+    stopTimer();
+    secondsElapsed = 0;
+    timerDisplay.textContent = "Time: 00:00";
+  }
+
+  // Audio Speed Control
+  speedBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const speed = parseFloat(btn.dataset.speed);
+      htmlAudio.playbackRate = speed;
+
+      speedBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
+
+  // Audio Controls
+  playBtn.addEventListener("click", () => {
+    startTimer();
+    htmlAudio.play().then(() => {
+      audioStatus.textContent = "Playing dialogue...";
+    }).catch(() => {
+      audioStatus.textContent = "Error al reproducir '4australia.mp3'";
+    });
+  });
+
+  pauseBtn.addEventListener("click", () => {
+    htmlAudio.pause();
+    audioStatus.textContent = "Paused";
+  });
+
+  repeatBtn.addEventListener("click", () => {
+    startTimer();
+    htmlAudio.currentTime = 0;
+    htmlAudio.play().then(() => {
+      audioStatus.textContent = "Replaying dialogue...";
+    }).catch(() => {
+      audioStatus.textContent = "Error al reproducir '4australia.mp3'";
+    });
+  });
+
+  // Shuffle Utility guaranteed to return a non-matching initial order
+  function getShuffledDialogue(array) {
+    let arr = [...array];
+    let isDifferent = false;
+
+    while (!isDifferent) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      isDifferent = arr.some((item, index) => item.id !== index);
+    }
+
+    return arr;
+  }
+
+  // Render Initial Cards
+  function renderInitialCards() {
+    container.innerHTML = "";
+    const shuffledData = getShuffledDialogue(originalDialogue);
+
+    shuffledData.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "dialogue-card";
+      card.draggable = true;
+      card.dataset.id = item.id;
+
+      card.innerHTML = `
+        <span class="handle">☰</span>
+        <span class="speaker-tag">${item.speaker}:</span>
+        <span class="card-text">${item.text}</span>
+        <span class="status-icon"></span>
+      `;
+
+      // Individual Card Drag Events
+      card.addEventListener("dragstart", () => {
+        startTimer();
+        card.classList.add("dragging");
+      });
+
+      card.addEventListener("dragend", () => {
+        card.classList.remove("dragging");
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+  // Live Drag & Drop without resetting audio
+  container.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    const afterElement = getDragAfterElement(container, e.clientY);
+    const draggable = document.querySelector(".dragging");
+    if (draggable) {
+      if (afterElement == null) {
+        container.appendChild(draggable);
+      } else {
+        container.insertBefore(draggable, afterElement);
+      }
+    }
+  });
+
+  function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll(".dialogue-card:not(.dragging)")];
+
+    return draggableElements.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+  }
+
+  // Check Answers Logic
+  document.getElementById("check-btn").addEventListener("click", () => {
+    stopTimer();
+    let score = 0;
+    const cards = container.querySelectorAll(".dialogue-card");
+
+    cards.forEach((card, index) => {
+      const itemId = parseInt(card.dataset.id);
+      const iconSpan = card.querySelector(".status-icon");
+
+      if (itemId === index) {
+        score++;
+        card.classList.add("correct");
+        card.classList.remove("incorrect");
+        iconSpan.textContent = "✓";
+        iconSpan.style.color = "var(--success)";
+      } else {
+        card.classList.add("incorrect");
+        card.classList.remove("correct");
+        iconSpan.textContent = "✗";
+        iconSpan.style.color = "var(--error)";
+      }
+    });
+
+    showResults(score);
+  });
+
+  function showResults(score) {
+    const total = originalDialogue.length;
+    const scoreDisplay = document.getElementById("score-display");
+    const motivationDisplay = document.getElementById("motivation-display");
+
+    scoreDisplay.textContent = `[${score}/${total}]`;
+
+    if (score === 10) {
+      motivationDisplay.textContent = "🎉 Outstanding job! Perfect listening comprehension! You got every line right!";
+    } else if (score >= 8) {
+      motivationDisplay.textContent = "🌟 Fantastic effort! You have a great ear for English dialogue!";
+    } else if (score >= 5) {
+      motivationDisplay.textContent = "😊 Good attempt! Listen one more time to catch the subtle details.";
+    } else {
+      motivationDisplay.textContent = "💪 Keep practicing! Try listening carefully to the character turns.";
+    }
+
+    document.getElementById("results-modal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("results-modal").style.display = "none";
+  }
+
+  // Reset Activity
+  document.getElementById("retry-btn").addEventListener("click", () => {
+    resetTimer();
+    renderInitialCards();
+  });
+
+  // Download Report
+  document.getElementById("download-btn").addEventListener("click", () => {
+    const studentName = nameSelect.value || "N/A";
+    const studentCourse = courseSelect.value || "N/A";
+    const date = dateInput.value || "N/A";
+    const timeSpent = timerDisplay.textContent.replace("Time: ", "");
+
+    let currentDialogueText = "";
+    const cards = container.querySelectorAll(".dialogue-card");
+    let correctCount = 0;
+
+    cards.forEach((card, idx) => {
+      const isCorrect = parseInt(card.dataset.id) === idx;
+      if (isCorrect) correctCount++;
+      const speaker = card.querySelector(".speaker-tag").textContent;
+      const text = card.querySelector(".card-text").textContent;
+      currentDialogueText += `${idx + 1}. ${speaker} ${text} [${isCorrect ? "CORRECT" : "INCORRECT"}]\n`;
+    });
+
+    const reportContent = `================================================
+COLEGIO SAN IGNACIO
+LISTENING COMPREHENSION REPORT: GETTING TO THE HOTEL
+================================================
+Estudiante    : ${studentName}
+Curso / Grade : ${studentCourse}
+Fecha         : ${date}
+Tiempo Usado  : ${timeSpent}
+Puntaje       : [${correctCount}/10]
+================================================
+
+ORDERED DIALOGUE SUBMISSION:
+------------------------------------------------
+${currentDialogueText}
+================================================
+`;
+
+    const blob = new Blob([reportContent], { type: "text/plain;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `Reporte_Listening_${studentName.replace(/\s+/g, '_')}.txt`;
+    link.click();
+  });
+
+  // Initial Load
+  renderInitialCards();
+</script>
+
+</body>
+</html>
